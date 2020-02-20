@@ -8,9 +8,11 @@ import com.it.friday.base.result.Results;
 import com.it.friday.domain.SysUser;
 import com.it.friday.dto.SysUserDto;
 import com.it.friday.service.SysUserService;
+import com.it.friday.vo.ChangePasswordVo;
 import com.it.friday.vo.SysUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,11 +82,23 @@ public class SysUserController {
     public Results<SysUser> saveUser(SysUserDto sysUserDto,Integer roleId){
 
         SysUser sysUser = null;
+        //1、判断用户名是否已经注册
+        sysUser = sysUserService.getUserByName(sysUserDto.getUsername());
+        if (!StringUtils.isEmpty(sysUser) && !(sysUser.getId().equals(sysUserDto.getId()))) {
+            return Results.failure(ResponseCode.USERNAME_REPEAT.getCode(),ResponseCode.USERNAME_REPEAT.getMessage());
+        }
+
         sysUser = sysUserService.getUserByPhone(sysUserDto.getTelephone());
-        //1、判断前台传来的手机号是否已经注册
+        //2、判断手机号是否已经注册
         if (!StringUtils.isEmpty(sysUser) && !(sysUser.getId().equals(sysUserDto.getId()))) {
             //是，则返回失败
             return Results.failure(ResponseCode.PHONE_REPEAT.getCode(),ResponseCode.PHONE_REPEAT.getMessage());
+        }
+
+        //3、判断邮箱是否已经注册
+        sysUser = sysUserService.getUserByEmail(sysUserDto.getEmail());
+        if (!StringUtils.isEmpty(sysUser) && !(sysUser.getId().equals(sysUserDto.getId()))) {
+            return Results.failure(ResponseCode.EMAIL_REPEAT.getCode(),ResponseCode.EMAIL_REPEAT.getMessage());
         }
 
         //2、否，则添加到用户表中
@@ -136,6 +150,24 @@ public class SysUserController {
         }else {
             return Results.failure();
         }
+    }
+
+    /**
+     * 修改密码
+     * @param changePasswordVo
+     * @return
+     */
+    @PostMapping("/changePassword")
+    public Results<SysUser> changePassword(ChangePasswordVo changePasswordVo) {
+
+        Integer result = sysUserService.changePassword(changePasswordVo.getUsername(), changePasswordVo.getOldPassword(), changePasswordVo.getNewPassword());
+        if (result == -1) {
+            Results.failure(1, "用户不存在");
+        } else if (result == -2) {
+            return Results.failure(1, "旧密码错误");
+        }
+        return Results.success();
+
     }
 
 }

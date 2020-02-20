@@ -1,6 +1,7 @@
 package com.it.friday.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.it.friday.base.result.Results;
 import com.it.friday.domain.SysRoleUser;
 import com.it.friday.domain.SysUser;
 import com.it.friday.dto.SysUserDto;
@@ -33,6 +34,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private SysRoleUserMapper sysRoleUserMapper;
 
+    /**
+     * 根据用户名查询用户
+     * @param username
+     * @return
+     */
     @Override
     public SysUser getUserByName(String username) {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
@@ -78,6 +84,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public SysUser getUserByPhone(String telephone) {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper.eq(StringUtils.isNotEmpty(telephone),"telephone",telephone);
+        SysUser sysUser = this.baseMapper.selectOne(wrapper);
+        return sysUser;
+    }
+
+    /**
+     * 查询邮箱是否已经被注册
+     * @param email
+     * @return
+     */
+    @Override
+    public SysUser getUserByEmail(String email) {
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+        wrapper.eq(StringUtils.isNotEmpty(email),"email",email);
         SysUser sysUser = this.baseMapper.selectOne(wrapper);
         return sysUser;
     }
@@ -145,5 +164,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //2、删除用户表
         int delete = this.baseMapper.deleteById(user);
         return delete>0;
+    }
+
+    /**
+     * 修改密码
+     * @param username
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @Override
+    public Integer changePassword(String username, String oldPassword, String newPassword) {
+        SysUser user = this.getUserByName(username);
+        if(user == null){
+            return -1;
+        }
+        if (! new BCryptPasswordEncoder().encode(oldPassword).equals(user.getPassword())){
+            return -2;
+        }
+        return this.baseMapper.changePassword(user.getId(),new BCryptPasswordEncoder().encode(newPassword));
     }
 }
