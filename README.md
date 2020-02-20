@@ -24,6 +24,5 @@
 5. Druid数据源监控功能；
 6. Swagger接口文档功能；
 7. 修改密码；
-8. 代码自动生成：根据数据表以及自定义模板自动生成html、controller、service、serviceImpl、dao、mapper.xml文件；
 
 
