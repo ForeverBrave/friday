@@ -76,14 +76,14 @@
                 cols: [
                     [
                         {type: 'numbers'},
-                        {field: 'name',width:180, title: '名称'},
-                        {field: 'href',width:160, title: 'url'},
-                        {field: 'sort',width:60, title: '排序'},
-                        {field:'permission',title:'资源标识'},
-                        {field:'type',width:60,title:'类型',templet:function(d){
+                        {field: 'name',width:'260',title: '名称'},
+                        {field: 'href',width:'360',title: 'url'},
+                        {field: 'sort',width:'160',title: '排序'},
+                        {field:'permission',width:'260',title:'资源标识'},
+                        {field:'type',title:'类型',width:'160',templet:function(d){
                                 return  d.type == '1' ? "菜单":"按钮";
                             }},
-                        {title:'操作',toolbar:'#barDemo'}
+                        {title:'操作',toolbar:'#barDemo',width:'300',align:'center'}
                     ]
                 ]
                 // done:function(){

@@ -62,4 +62,11 @@ public interface SysPermissionService extends IService<SysPermission> {
      * @return
      */
     boolean deletePermission(Integer id);
+
+    /**
+     * 根据userid查询菜单
+     * @param userId
+     * @return
+     */
+    JSONArray getMenu(Integer userId);
 }

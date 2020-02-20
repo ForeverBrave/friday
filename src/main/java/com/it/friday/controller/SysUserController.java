@@ -10,6 +10,7 @@ import com.it.friday.dto.SysUserDto;
 import com.it.friday.service.SysUserService;
 import com.it.friday.vo.SysUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ public class SysUserController {
      * @return
      */
     @GetMapping("/getAllUserByPage")
+    @PreAuthorize("hasAuthority('sys:user:query')")
     public Results<SysUser> getAllUserByPage(SysUserVo sysUserVo){
         //创建page对象，传入两个参数（当前页数，每页记录数）
         IPage<SysUser> pageUser = new Page<>(sysUserVo.getPage(),sysUserVo.getLimit());
@@ -126,6 +128,7 @@ public class SysUserController {
      * @return
      */
     @GetMapping("/delete")
+    @PreAuthorize("hasAuthority('sys:user:del')")
     public Results deleteUser(SysUserDto userDto){
         boolean result = sysUserService.deleteUser(userDto);
         if (result) {

@@ -52,10 +52,10 @@ public class SysUser implements Serializable {
     private Date birthday;
 
     @TableField("sex")
-    private boolean sex;
+    private Integer sex;
 
     @TableField("status")
-    private boolean status;
+    private Integer status;
 
     @TableField(value = "createTime",fill = FieldFill.INSERT)
     private Date createTime;

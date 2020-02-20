@@ -7,6 +7,7 @@ import com.it.friday.service.SysPermissionService;
 import com.it.friday.service.SysRoleService;
 import com.it.friday.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,36 +39,42 @@ public class ApiController {
     }
 
     @GetMapping("/user/add")
+    @PreAuthorize("hasAuthority('sys:user:add')")
     public String addUser(Model model){
         model.addAttribute(new SysUser());
         return "user/user-add";
     }
 
     @GetMapping("/user/edit")
+    @PreAuthorize("hasAuthority('sys:user:edit')")
     public String editUser(Model model,SysUser sysUser){
         model.addAttribute(sysUserService.getUserById(sysUser.getId()));
         return "user/user-edit";
     }
 
     @GetMapping("/role/add")
+    @PreAuthorize("hasAuthority('sys:role:add')")
     public String addRole(Model model) {
         model.addAttribute("sysRole",new SysRole());
         return "role/role-add";
     }
 
     @GetMapping("/role/edit")
+    @PreAuthorize("hasAuthority('sys:role:edit')")
     public String editRole(Model model,SysRole sysRole){
         model.addAttribute("sysRole",sysRoleService.getRoleById(sysRole.getId()));
         return "role/role-edit";
     }
 
     @GetMapping("/permission/add")
+    @PreAuthorize("hasAuthority('sys:menu:add')")
     public String addPermission(Model model) {
         model.addAttribute("sysPermission",new SysPermission());
         return "permission/permission-add";
     }
 
     @GetMapping("/permission/edit")
+    @PreAuthorize("hasAuthority('sys:menu:edit')")
     public String editPermission(Model model, SysPermission permission) {
         model.addAttribute("sysPermission",sysPermissionService.getSysPermissionById(permission.getId()));
         return "permission/permission-add";

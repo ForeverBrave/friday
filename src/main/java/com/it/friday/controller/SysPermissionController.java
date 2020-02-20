@@ -7,6 +7,7 @@ import com.it.friday.domain.SysPermission;
 import com.it.friday.dto.SysRoleDto;
 import com.it.friday.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class SysPermissionController {
      * @return
      */
     @GetMapping("listAllPermission")
+    @PreAuthorize("hasAuthority('sys:menu:query')")
     public Results<JSONArray> listAllPermission(){
         JSONArray allPermission = permissionService.listAllPermission();
         return Results.success(allPermission);
@@ -93,9 +95,21 @@ public class SysPermissionController {
      * @return
      */
     @GetMapping("delete")
+    @PreAuthorize("hasAuthority('sys:menu:del')")
     public Results deletePermission(SysPermission sysPermission){
         boolean result = permissionService.deletePermission(sysPermission.getId());
         return result ? Results.success() : Results.failure();
+    }
+
+    /**
+     * 根据userid查询菜单
+     * @param userId
+     * @return
+     */
+    @GetMapping("menu")
+    public Results getMenu(Integer userId){
+        JSONArray menu = permissionService.getMenu(userId);
+        return Results.success(menu);
     }
 
 

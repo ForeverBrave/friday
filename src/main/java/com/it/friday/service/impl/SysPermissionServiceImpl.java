@@ -10,6 +10,7 @@ import com.it.friday.utils.TreeUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -100,5 +101,19 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 根据userid查询菜单
+     * @param userId
+     * @return
+     */
+    @Override
+    public JSONArray getMenu(Integer userId) {
+        List<SysPermission> datas = this.baseMapper.listByUserId(userId);
+        datas = datas.stream().filter(p -> p.getType().equals(1)).collect(Collectors.toList());
+        JSONArray array = new JSONArray();
+        TreeUtils.setPermissionsTree(0,datas,array);
+        return array;
     }
 }

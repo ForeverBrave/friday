@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.it.friday.utils.MD5;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +53,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         if(roleId != null){
             //用户表插入
-            user.setStatus(true);
-            user.setPassword(MD5.crypt(user.getPassword()));
+            user.setStatus(1);
+            //user.setPassword(MD5.crypt(user.getPassword()));
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+
             insert = this.baseMapper.insert(user);
             //权限表插入
             SysRoleUser sysRoleUser = new SysRoleUser();

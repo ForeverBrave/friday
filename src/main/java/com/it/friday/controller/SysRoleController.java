@@ -14,6 +14,7 @@ import com.it.friday.vo.SysRoleVo;
 import com.it.friday.vo.SysUserVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class SysRoleController {
      * @return
      */
     @GetMapping("/getAllRoleByPage")
+    @PreAuthorize("hasAnyAuthority('sys:role:query')")
     public Results<SysRole> getAllUserByPage(SysRoleVo sysRoleVo){
         //创建page对象，传入两个参数（当前页数，每页记录数）
         IPage<SysRole> pageUser = new Page<>(sysRoleVo.getPage(),sysRoleVo.getLimit());
@@ -99,6 +101,7 @@ public class SysRoleController {
      * @return
      */
     @GetMapping("delete")
+    @PreAuthorize("hasAnyAuthority('sys:role:del')")
     public Results deleteRole(SysRoleDto sysRoleDto){
         boolean result = sysRoleService.deleteRole(sysRoleDto.getId());
         if (result) {
