@@ -62,7 +62,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/login.html",
                         "/xadmin/**",
-                        "/tretable-lay/**",
+                        "/treetable-lay/**",
                         "/ztree/**",
                         "/static/**") //配置不需要被拦截的路径
                 .permitAll()
